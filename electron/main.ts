@@ -7,10 +7,10 @@ let saveQueue: Promise<void> = Promise.resolve()
 
 async function createWindow() {
   const window = new BrowserWindow({
-    width: 420,
-    height: 560,
-    minWidth: 320,
-    minHeight: 360,
+    width: 260,
+    height: 315,
+    minWidth: 260,
+    minHeight: 315,
     title: 'QuickNote',
     backgroundColor: '#fff8dc',
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',

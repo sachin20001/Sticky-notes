@@ -2,7 +2,7 @@ import { Check, Copy, Pin, StickyNote } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCopyableLine } from './lines'
 
-type HoveredLine = { index: number; top: number; left: number } | null
+type HoveredLine = { index: number; top: number; left: number; highlightTop: number; highlightHeight: number } | null
 
 export default function App() {
   const [content, setContent] = useState('')
@@ -56,12 +56,20 @@ export default function App() {
     if (index < 0 || line === null) { setHovered(null); return }
     const range = document.createRange()
     range.selectNodeContents(blocks[index])
-    const firstTextRow = range.getClientRects()[0]
-    if (!firstTextRow) { setHovered(null); return }
+    const textRows = Array.from(range.getClientRects())
+    const lastTextRow = textRows.at(-1)
+    if (!lastTextRow) { setHovered(null); return }
     const buttonSize = 32
-    const left = Math.min(firstTextRow.right - bounds.left + 5, bounds.width - buttonSize - 3)
-    const top = firstTextRow.top - bounds.top + (firstTextRow.height - buttonSize) / 2
-    setHovered({ index, top, left })
+    const blockBounds = blocks[index].getBoundingClientRect()
+    const left = Math.min(lastTextRow.right - bounds.left + 5, bounds.width - buttonSize - 3)
+    const top = lastTextRow.top - bounds.top + (lastTextRow.height - buttonSize) / 2
+    setHovered({
+      index,
+      top,
+      left,
+      highlightTop: blockBounds.top - bounds.top,
+      highlightHeight: blockBounds.height
+    })
   }
 
   const copyLine = async (index: number) => {
@@ -113,6 +121,13 @@ export default function App() {
         <div className="editor-mirror" ref={mirrorRef} aria-hidden="true">
           {content.split('\n').map((line, index) => <div className="mirror-line" key={index}>{line || '\u00a0'}</div>)}
         </div>
+        {hovered && (
+          <div
+            className="hover-highlight"
+            style={{ top: hovered.highlightTop, height: hovered.highlightHeight }}
+            aria-hidden="true"
+          />
+        )}
         <textarea
           ref={textareaRef}
           className="note-editor"
