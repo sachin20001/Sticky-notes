@@ -1,4 +1,4 @@
-import { Check, Copy, StickyNote } from 'lucide-react'
+import { Check, Copy, Pin, StickyNote } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { getCopyableLine } from './lines'
 
@@ -8,6 +8,7 @@ export default function App() {
   const [content, setContent] = useState('')
   const [ready, setReady] = useState(false)
   const [loadFailed, setLoadFailed] = useState(false)
+  const [pinned, setPinned] = useState(false)
   const [hovered, setHovered] = useState<HoveredLine>(null)
   const [copiedLine, setCopiedLine] = useState<number | null>(null)
   const [copyFailed, setCopyFailed] = useState(false)
@@ -80,13 +81,33 @@ export default function App() {
     }
   }
 
+  const togglePin = async () => {
+    try {
+      setPinned(await window.quickNote.setAlwaysOnTop(!pinned))
+    } catch {
+      setPinned(false)
+    }
+  }
+
   const lineText = hovered ? getCopyableLine(content, hovered.index) ?? '' : ''
 
   return (
     <main className={`note-shell ${window.quickNote.platform === 'darwin' ? 'is-mac' : ''}`}>
       <header className="note-header">
         <div className="brand"><span className="brand-icon"><StickyNote size={16} /></span><span>QuickNote</span></div>
-        <span className="save-state" aria-live="polite">{loadFailed ? 'Couldn’t load note' : ready ? 'Saved automatically' : 'Loading note…'}</span>
+        <div className="header-actions">
+          <button
+            className={`pin-button ${pinned ? 'is-pinned' : ''}`}
+            type="button"
+            onClick={() => void togglePin()}
+            aria-label={pinned ? 'Unpin window from always on top' : 'Keep window always on top'}
+            aria-pressed={pinned}
+            title={pinned ? 'Unpin window' : 'Keep on top'}
+          >
+            <Pin size={15} />
+          </button>
+          <span className="save-state" aria-live="polite">{loadFailed ? 'Couldn’t load note' : ready ? 'Saved automatically' : 'Loading note…'}</span>
+        </div>
       </header>
       <section className="editor-wrap" aria-label="Sticky note editor" onMouseMove={handlePointerMove} onMouseLeave={() => setHovered(null)}>
         <div className="editor-mirror" ref={mirrorRef} aria-hidden="true">

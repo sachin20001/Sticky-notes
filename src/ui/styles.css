@@ -7,7 +7,12 @@ body { min-width: 320px; min-height: 360px; overflow: hidden; }
 .note-shell.is-mac .note-header { padding-left: 108px; }
 .brand { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 700; letter-spacing: -.02em; color: #514827; }
 .brand-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #f3d56f; color: #685117; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
 .save-state { color: #9b916d; font-size: 10px; }
+.pin-button { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid transparent; border-radius: 9px; color: #8f8157; background: transparent; cursor: pointer; -webkit-app-region: no-drag; transition: color .15s, background .15s, border-color .15s; }
+.pin-button:hover { color: #624a10; background: rgba(249, 231, 165, .75); }
+.pin-button.is-pinned { color: #72520b; background: #f5dfa0; border-color: rgba(129, 102, 28, .2); }
+.pin-button:focus-visible { outline: 2px solid #9e7416; outline-offset: 2px; }
 .editor-wrap { position: relative; flex: 1; min-height: 0; margin-top: 13px; overflow: hidden; }
 .note-editor, .editor-mirror { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border: 0; padding: 10px 44px 12px 2px; font: 13px/25px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; letter-spacing: 0; white-space: pre-wrap; overflow-wrap: break-word; tab-size: 2; }
 .note-editor { z-index: 1; resize: none; outline: none; color: #393525; background: transparent; overflow: auto; caret-color: #a67819; }

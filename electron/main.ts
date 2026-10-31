@@ -54,6 +54,14 @@ ipcMain.handle('clipboard:write', async (_event, content: unknown) => {
   clipboard.writeText(content)
 })
 
+ipcMain.handle('window:set-always-on-top', (event, pinned: unknown) => {
+  if (typeof pinned !== 'boolean') throw new TypeError('Pinned state must be boolean')
+  const window = BrowserWindow.fromWebContents(event.sender)
+  if (!window || window.isDestroyed()) return false
+  window.setAlwaysOnTop(pinned)
+  return window.isAlwaysOnTop()
+})
+
 app.whenReady().then(() => {
   void createWindow()
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) void createWindow() })

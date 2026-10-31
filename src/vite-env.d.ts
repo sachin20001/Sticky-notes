@@ -6,5 +6,6 @@ interface Window {
     load: () => Promise<string>
     save: (content: string) => Promise<void>
     copy: (content: string) => Promise<void>
+    setAlwaysOnTop: (pinned: boolean) => Promise<boolean>
   }
 }
